@@ -1,0 +1,6 @@
+gradio==4.44.1
+pillow
+pandas
+openai
+python-dotenv
+pydantic
