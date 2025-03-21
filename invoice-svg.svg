@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <!-- 背景 -->
+  <rect width="800" height="1000" fill="#FFFFFF" />
+  <rect x="20" y="20" width="760" height="960" fill="#FFFFFF" stroke="#333333" stroke-width="2" />
+  
+  <!-- ヘッダー部分 -->
+  <rect x="20" y="20" width="760" height="120" fill="#f0f0f0" />
+  
+  <!-- 発行元企業のロゴと情報 -->
+  <circle cx="80" cy="60" r="30" fill="#3366CC" />
+  <text x="80" y="67" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#FFFFFF" font-weight="bold">SKT</text>
+  <text x="130" y="55" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#333333">株式会社スカイテック</text>
+  <text x="130" y="80" font-family="Arial, sans-serif" font-size="12" fill="#666666">〒105-0003 東京都港区西新橋2-7-4</text>
+  <text x="130" y="100" font-family="Arial, sans-serif" font-size="12" fill="#666666">TEL: 03-5157-1234 FAX: 03-5157-1235</text>
+  <text x="130" y="120" font-family="Arial, sans-serif" font-size="12" fill="#666666">E-mail: info@skytech.co.jp</text>
+  
+  <!-- 見積書タイトル -->
+  <text x="400" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#333333">見積書</text>
+  
+  <!-- 見積番号と日付 -->
+  <text x="600" y="200" text-anchor="start" font-family="Arial, sans-serif" font-size="12" fill="#333333">見積番号: EST-2025-0321</text>
+  <text x="600" y="220" text-anchor="start" font-family="Arial, sans-serif" font-size="12" fill="#333333">見積日: 2025年3月21日</text>
+  <text x="600" y="240" text-anchor="start" font-family="Arial, sans-serif" font-size="12" fill="#333333">有効期限: 2025年4月20日</text>
+  
+  <!-- 宛先情報 -->
+  <text x="50" y="220" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333333">株式会社フューチャーネット 御中</text>
+  <text x="50" y="240" font-family="Arial, sans-serif" font-size="12" fill="#666666">〒150-0002 東京都渋谷区渋谷3-15-8</text>
+  <text x="50" y="260" font-family="Arial, sans-serif" font-size="12" fill="#666666">担当: 山田 太郎 様</text>
+  <text x="50" y="280" font-family="Arial, sans-serif" font-size="12" fill="#666666">TEL: 03-3498-5678</text>
+  
+  <!-- 件名 -->
+  <rect x="50" y="300" width="700" height="30" fill="#3366CC" />
+  <text x="60" y="320" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF">件名: クラウドサーバー環境構築及び保守サービス</text>
+  
+  <!-- 商品テーブルヘッダー -->
+  <rect x="50" y="350" width="700" height="30" fill="#E6E6E6" />
+  <text x="70" y="370" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333333">項目</text>
+  <text x="350" y="370" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333333">数量</text>
+  <text x="450" y="370" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333333">単価（税抜）</text>
+  <text x="580" y="370" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333333">金額（税抜）</text>
+  <text x="700" y="370" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333333">備考</text>
+  
+  <!-- 商品明細 -->
+  <line x1="50" y1="380" x2="750" y2="380" stroke="#CCCCCC" stroke-width="1" />
+  <text x="70" y="400" font-family="Arial, sans-serif" font-size="12" fill="#333333">クラウドサーバー初期構築</text>
+  <text x="350" y="400" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="middle">1式</text>
+  <text x="450" y="400" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="end">¥450,000</text>
+  <text x="580" y="400" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="end">¥450,000</text>
+  <text x="700" y="400" font-family="Arial, sans-serif" font-size="12" fill="#333333">初回のみ</text>
+  
+  <line x1="50" y1="410" x2="750" y2="410" stroke="#CCCCCC" stroke-width="1" />
+  <text x="70" y="430" font-family="Arial, sans-serif" font-size="12" fill="#333333">高性能仮想サーバー（8vCPU/32GB）</text>
+  <text x="350" y="430" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="middle">2台</text>
+  <text x="450" y="430" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="end">¥75,000</text>
+  <text x="580" y="430" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="end">¥150,000</text>
+  <text x="700" y="430" font-family="Arial, sans-serif" font-size="12" fill="#333333">月額</text>
+  
+  <line x1="50" y1="440" x2="750" y2="440" stroke="#CCCCCC" stroke-width="1" />
+  <text x="70" y="460" font-family="Arial, sans-serif" font-size="12" fill="#333333">データベースサーバー</text>
+  <text x="350" y="460" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="middle">1台</text>
+  <text x="450" y="460" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="end">¥85,000</text>
+  <text x="580" y="460" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="end">¥85,000</text>
+  <text x="700" y="460" font-family="Arial, sans-serif" font-size="12" fill="#333333">月額</text>
+  
+  <line x1="50" y1="470" x2="750" y2="470" stroke="#CCCCCC" stroke-width="1" />
+  <text x="70" y="490" font-family="Arial, sans-serif" font-size="12" fill="#333333">バックアップストレージ（2TB）</text>
+  <text x="350" y="490" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="middle">1式</text>
+  <text x="450" y="490" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="end">¥40,000</text>
+  <text x="580" y="490" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="end">¥40,000</text>
+  <text x="700" y="490" font-family="Arial, sans-serif" font-size="12" fill="#333333">月額</text>
+  
+  <line x1="50" y1="500" x2="750" y2="500" stroke="#CCCCCC" stroke-width="1" />
+  <text x="70" y="520" font-family="Arial, sans-serif" font-size="12" fill="#333333">24時間監視・保守サポート</text>
+  <text x="350" y="520" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="middle">1式</text>
+  <text x="450" y="520" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="end">¥120,000</text>
+  <text x="580" y="520" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="end">¥120,000</text>
+  <text x="700" y="520" font-family="Arial, sans-serif" font-size="12" fill="#333333">月額</text>
+  
+  <line x1="50" y1="530" x2="750" y2="530" stroke="#CCCCCC" stroke-width="1" />
+  <text x="70" y="550" font-family="Arial, sans-serif" font-size="12" fill="#333333">WAF/セキュリティ対策</text>
+  <text x="350" y="550" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="middle">1式</text>
+  <text x="450" y="550" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="end">¥65,000</text>
+  <text x="580" y="550" font-family="Arial, sans-serif" font-size="12" fill="#333333" text-anchor="end">¥65,000</text>
+  <text x="700" y="550" font-family="Arial, sans-serif" font-size="12" fill="#333333">月額</text>
+  
+  <!-- 合計金額 -->
+  <line x1="350" y1="580" x2="750" y2="580" stroke="#333333" stroke-width="2" />
+  
+  <!-- 小計部分 -->
+  <text x="450" y="600" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333333">小計（税抜）</text>
+  <text x="700" y="600" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333333" text-anchor="end">¥910,000</text>
+  
+  <!-- 消費税部分 -->
+  <text x="450" y="620" font-family="Arial, sans-serif" font-size="14" fill="#333333">消費税（10%）</text>
+  <text x="700" y="620" font-family="Arial, sans-serif" font-size="14" fill="#333333" text-anchor="end">¥91,000</text>
+  
+  <line x1="350" y1="630" x2="750" y2="630" stroke="#333333" stroke-width="1" />
+  
+  <!-- 合計金額部分 -->
+  <rect x="350" y="640" width="400" height="30" fill="#3366CC" />
+  <text x="450" y="660" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF">合計金額（税込）</text>
+  <text x="700" y="660" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="end">¥1,001,000</text>
+  
+  <!-- 備考欄 -->
+  <rect x="50" y="690" width="700" height="120" fill="#F9F9F9" stroke="#CCCCCC" stroke-width="1" />
+  <text x="60" y="710" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333333">備考</text>
+  <text x="60" y="730" font-family="Arial, sans-serif" font-size="12" fill="#333333">・初期構築費は契約時に一括でお支払いいただきます。</text>
+  <text x="60" y="750" font-family="Arial, sans-serif" font-size="12" fill="#333333">・月額料金は利用開始月の翌月から発生し、毎月末締めの翌月15日までにお支払いいただきます。</text>
+  <text x="60" y="770" font-family="Arial, sans-serif" font-size="12" fill="#333333">・契約期間は最低12ヶ月となります。12ヶ月未満での解約の場合は残りの期間の基本料金をお支払いいただきます。</text>
+  <text x="60" y="790" font-family="Arial, sans-serif" font-size="12" fill="#333333">・本見積書の有効期限は発行日より30日間となります。</text>
+  
+  <!-- フッター部分 -->
+  <line x1="50" y1="850" x2="750" y2="850" stroke="#CCCCCC" stroke-width="1" />
+  <text x="60" y="870" font-family="Arial, sans-serif" font-size="12" fill="#666666">お問い合わせは下記の担当者までお願いいたします。</text>
+  <text x="60" y="890" font-family="Arial, sans-serif" font-size="12" fill="#666666">営業担当: 佐藤 健太 (k.sato@skytech.co.jp)</text>
+  <text x="60" y="910" font-family="Arial, sans-serif" font-size="12" fill="#666666">技術担当: 鈴木 誠 (m.suzuki@skytech.co.jp)</text>
+  
+  <!-- 印鑑欄 -->
+  <rect x="600" y="830" width="100" height="100" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" />
+  <circle cx="650" cy="880" r="40" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" />
+  <text x="650" y="885" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#FF0000">認印</text>
+</svg>
