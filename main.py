@@ -31,6 +31,25 @@ class ImageAnalysisResult(BaseModel):
     title: str = Field(..., description="A concise, descriptive title for the image")
     description: str = Field(..., description="Detailed description of the image content, style, and possible use cases")
 
+# 請求書分析用のPydanticモデル
+class InvoiceItem(BaseModel):
+    """請求書の項目"""
+    name: str = Field(..., description="項目名/商品名")
+    quantity: str = Field(..., description="数量")
+    unit_price: str = Field(..., description="単価")
+    amount: str = Field(..., description="金額")
+
+class InvoiceAnalysisResult(BaseModel):
+    """請求書から抽出した情報"""
+    invoice_number: str = Field(..., description="請求書番号")
+    issue_date: str = Field(..., description="発行日")
+    due_date: str = Field(..., description="支払期限")
+    company_name: str = Field(..., description="請求元会社名")
+    total_amount: str = Field(..., description="合計金額")
+    tax_amount: str = Field(..., description="税額")
+    items: List[InvoiceItem] = Field(..., description="請求項目のリスト")
+    notes: str = Field(..., description="その他特記事項")
+
 # ソリューション定義
 class Solution(BaseModel):
     """会社のソリューション定義"""
@@ -150,39 +169,111 @@ class ProcessedInquiry(BaseModel):
 
 def analyze_image(image):
     """
-    Analyze the uploaded image and generate title and description using Structured Outputs
+    請求書画像から情報を抽出する
     """
     if image is None:
-        return "", "", "No image uploaded"
+        return None, "画像がアップロードされていません"
     
     try:
-        # Convert image to base64 for OpenAI API
+        # 画像をbase64に変換
         buffered = io.BytesIO()
         image.save(buffered, format="PNG")
         img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
         
-        # Use the parse method with a Pydantic model
+        # OpenAI APIでPydanticモデルを使用して構造化データを取得
         response = client.beta.chat.completions.parse(
             model=MODEL,
             messages=[
                 {
+                    "role": "system",
+                    "content": "あなたは請求書から情報を抽出する専門家です。アップロードされた請求書画像から、請求書番号、日付、金額、項目などの重要情報を正確に抽出してください。"
+                },
+                {
                     "role": "user", 
                     "content": [
-                        {"type": "text", "text": "この画像のタイトルと詳細な説明を生成してください。この画像が何を描写しているか、主要な被写体、スタイル、および考えられる用途を考慮してください。"},
+                        {"type": "text", "text": "この請求書画像から情報を抽出してください。請求書番号、発行日、支払期限、請求元、金額、税額、請求項目などを識別してください。情報が見つからない場合は「不明」と記入してください。"},
                         {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{img_str}"}}
                     ]
                 }
             ],
-            response_format=ImageAnalysisResult,
-            max_tokens=500
+            response_format=InvoiceAnalysisResult,
+            max_tokens=1000
         )
         
-        # Get the parsed Pydantic model directly
+        # 解析結果を取得
         result = response.choices[0].message.parsed
-        return result.title, result.description, ""
+        
+        # 結果を整形してHTML形式で返す
+        html_output = f"""
+        <div style='background-color: #f9f9f9; padding: 20px; border-radius: 8px; font-family: Arial, sans-serif;'>
+            <h3 style='color: #333; margin-top: 0;'>請求書情報</h3>
+            <table style='width: 100%; border-collapse: collapse;'>
+                <tr>
+                    <td style='font-weight: bold; padding: 8px; border-bottom: 1px solid #ddd;'>請求書番号</td>
+                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{result.invoice_number}</td>
+                </tr>
+                <tr>
+                    <td style='font-weight: bold; padding: 8px; border-bottom: 1px solid #ddd;'>発行日</td>
+                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{result.issue_date}</td>
+                </tr>
+                <tr>
+                    <td style='font-weight: bold; padding: 8px; border-bottom: 1px solid #ddd;'>支払期限</td>
+                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{result.due_date}</td>
+                </tr>
+                <tr>
+                    <td style='font-weight: bold; padding: 8px; border-bottom: 1px solid #ddd;'>請求元</td>
+                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{result.company_name}</td>
+                </tr>
+                <tr>
+                    <td style='font-weight: bold; padding: 8px; border-bottom: 1px solid #ddd;'>合計金額</td>
+                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{result.total_amount}</td>
+                </tr>
+                <tr>
+                    <td style='font-weight: bold; padding: 8px; border-bottom: 1px solid #ddd;'>税額</td>
+                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{result.tax_amount}</td>
+                </tr>
+            </table>
+            
+            <h4 style='color: #333; margin-top: 20px;'>請求項目</h4>
+            <table style='width: 100%; border-collapse: collapse;'>
+                <tr style='background-color: #eee;'>
+                    <th style='padding: 8px; text-align: left; border-bottom: 1px solid #ddd;'>項目</th>
+                    <th style='padding: 8px; text-align: left; border-bottom: 1px solid #ddd;'>数量</th>
+                    <th style='padding: 8px; text-align: left; border-bottom: 1px solid #ddd;'>単価</th>
+                    <th style='padding: 8px; text-align: left; border-bottom: 1px solid #ddd;'>金額</th>
+                </tr>
+        """
+        
+        # 請求項目を追加
+        for item in result.items:
+            html_output += f"""
+                <tr>
+                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{item.name}</td>
+                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{item.quantity}</td>
+                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{item.unit_price}</td>
+                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{item.amount}</td>
+                </tr>
+            """
+        
+        html_output += """
+            </table>
+        """
+        
+        # 備考があれば追加
+        if result.notes:
+            # 改行を<br>に変換
+            notes_html = result.notes.replace('\n', '<br>')
+            html_output += f"""
+            <h4 style='color: #333; margin-top: 20px;'>備考</h4>
+            <p style='margin-top: 5px;'>{notes_html}</p>
+            """
+        
+        html_output += "</div>"
+        
+        return html_output, ""
     
     except Exception as e:
-        return "", "", f"Error analyzing image: {str(e)}"
+        return None, f"請求書の分析中にエラーが発生しました: {str(e)}"
 
 def analyze_sales_report(csv_file, progress=gr.Progress()):
     """
@@ -828,25 +919,25 @@ with gr.Blocks(title="LLMビジネスアプリケーション デモ") as demo:
     gr.Markdown("# LLMビジネスアプリケーション デモ")
     gr.Markdown("ビジネス向け大規模言語モデルの非チャットアプリケーションを探索する")
     
-    with gr.Tab("画像解析とカテゴリ分類"):
-        gr.Markdown("## 画像解析とカテゴリ分類")
-        gr.Markdown("画像をアップロードすると、自動的にタイトルと説明が生成されます。これはコンテンツ管理、製品分類、またはメディア整理に利用できます。")
+    with gr.Tab("請求書解析"):
+        gr.Markdown("## 請求書画像解析")
+        gr.Markdown("請求書画像をアップロードすると、AI技術を使って重要情報（請求書番号、発行日、金額、項目など）を自動的に抽出します。請求書処理の効率化、データ入力の自動化に活用できます。")
         
         with gr.Row():
             with gr.Column(scale=1):
-                image_input = gr.Image(type="pil", label="画像をアップロード")
-                analyze_button = gr.Button("画像解析", variant="primary")
-            with gr.Column(scale=1):
-                title_output = gr.Textbox(label="生成されたタイトル")
-                description_output = gr.Textbox(label="生成された説明", lines=8)
+                image_input = gr.Image(type="pil", label="請求書画像をアップロード")
+                analyze_button = gr.Button("請求書を解析", variant="primary")
+            
+            with gr.Column(scale=2):
+                result_output = gr.HTML(label="抽出結果")
                 error_output = gr.Textbox(label="エラーメッセージ", visible=True)
         
         analyze_button.click(
             analyze_image,
             inputs=[image_input],
-            outputs=[title_output, description_output, error_output]
+            outputs=[result_output, error_output]
         )
-        
+
     with gr.Tab("営業訪問分析"):
         gr.Markdown("## 営業訪問記録分析")
         gr.Markdown("""
@@ -894,7 +985,7 @@ with gr.Blocks(title="LLMビジネスアプリケーション デモ") as demo:
             outputs=[status_output, results_output]
         )
 
-    with gr.Tab("Customer Support Response Generator"):
+    with gr.Tab("カスタマーサポート回答生成"):
         gr.Markdown("## カスタマーサポート回答生成システム")
         gr.Markdown("""
         顧客からの問い合わせを分析し、適切な回答案を生成するシステムです。
@@ -908,9 +999,9 @@ with gr.Blocks(title="LLMビジネスアプリケーション デモ") as demo:
         with gr.Row():
             with gr.Column(scale=1):
                 # 入力セクション
-                csv_input = gr.File(label="問い合わせCSVファイル", file_types=[".csv"])
-                analyze_button = gr.Button("分析開始", variant="primary")
-                status_output = gr.Textbox(label="状態", value="ファイルをアップロードして「分析開始」をクリックしてください")
+                cs_csv_input = gr.File(label="問い合わせCSVファイル", file_types=[".csv"])
+                cs_analyze_button = gr.Button("分析開始", variant="primary")
+                cs_status_output = gr.Textbox(label="状態", value="ファイルをアップロードして「分析開始」をクリックしてください")
                 
                 # 問い合わせ選択
                 gr.Markdown("### 問い合わせ詳細")
@@ -945,7 +1036,7 @@ with gr.Blocks(title="LLMビジネスアプリケーション デモ") as demo:
             
             with gr.Column(scale=2):
                 # 一覧表示セクション
-                results_output = gr.HTML(label="分析結果一覧")
+                cs_results_output = gr.HTML(label="分析結果一覧")
                 
                 # 選択された問い合わせの詳細表示
                 with gr.Row():
@@ -961,16 +1052,12 @@ with gr.Blocks(title="LLMビジネスアプリケーション デモ") as demo:
                     response_status = gr.Textbox(label="生成状態", value="", visible=True)
                     formal_response = gr.Textbox(label="回答", lines=8, interactive=True)
                     followup_info = gr.HTML(label="フォローアップ")
-                    
-                    # with gr.Row():
-                    #     copy_formal_btn = gr.Button("回答をコピー")
-                    #     # コピー機能はクライアントサイドJSで実装
         
         # CSVアップロード・分析のイベント連携
-        analyze_result = analyze_button.click(
+        analyze_result = cs_analyze_button.click(
             process_customer_inquiries,
-            inputs=[csv_input],
-            outputs=[status_output, results_output, inquiry_selector, processed_data_state],
+            inputs=[cs_csv_input],
+            outputs=[cs_status_output, cs_results_output, inquiry_selector, processed_data_state],
             show_progress=True
         )
         
@@ -1042,7 +1129,7 @@ with gr.Blocks(title="LLMビジネスアプリケーション デモ") as demo:
         # 分析完了後に最初の問い合わせを選択して詳細を表示
         analyze_result.then(
             init_first_inquiry,
-            inputs=[status_output, results_output, inquiry_selector, processed_data_state],
+            inputs=[cs_status_output, cs_results_output, inquiry_selector, processed_data_state],
             outputs=[inquiry_selector, inquiry_text, category_selector, urgency_selector, key_points, emotion_output, additional_context]
         )
         
@@ -1057,7 +1144,7 @@ with gr.Blocks(title="LLMビジネスアプリケーション デモ") as demo:
         generate_button.click(
             adjust_and_generate,
             inputs=[inquiry_selector, category_selector, urgency_selector, additional_context, processed_data_state],
-            outputs=[status_output, formal_response, followup_info, processed_data_state],
+            outputs=[cs_status_output, formal_response, followup_info, processed_data_state],
             show_progress=True
         ).then(
             lambda: gr.update(open=True),
