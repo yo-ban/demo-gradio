@@ -8,7 +8,7 @@ import pandas as pd
 import concurrent.futures
 import time
 from PIL import Image
-from openai import OpenAI
+from openai import OpenAI, AzureOpenAI
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 from typing import List, Dict, Optional, Any, Literal
@@ -17,8 +17,13 @@ from typing import List, Dict, Optional, Any, Literal
 load_dotenv()
 
 # Initialize OpenAI client
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-MODEL = os.getenv("OPENAI_MODEL")
+environment = os.getenv("ENVIRONMENT")
+if environment == "azure":
+    client = AzureOpenAI(api_key=os.getenv("AZURE_API_KEY"), api_version="2024-10-21", azure_endpoint=os.getenv("AZURE_ENDPOINT"))
+    MODEL = os.getenv("AZURE_MODEL")
+else:
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    MODEL = os.getenv("OPENAI_MODEL")
 
 # Pydantic models for structured outputs
 class ImageAnalysisResult(BaseModel):
