@@ -41,13 +41,13 @@ class InvoiceItem(BaseModel):
 
 class InvoiceAnalysisResult(BaseModel):
     """請求書から抽出した情報"""
-    invoice_number: str = Field(..., description="請求書番号")
+    invoice_number: str = Field(..., description="見積書番号")
     issue_date: str = Field(..., description="発行日")
-    due_date: str = Field(..., description="支払期限")
-    company_name: str = Field(..., description="請求元会社名")
+    expire_date: str = Field(..., description="有効期限")
+    company_name: str = Field(..., description="発行元会社名")
     total_amount: str = Field(..., description="合計金額")
     tax_amount: str = Field(..., description="税額")
-    items: List[InvoiceItem] = Field(..., description="請求項目のリスト")
+    items: List[InvoiceItem] = Field(..., description="見積項目のリスト")
     notes: str = Field(..., description="その他特記事項")
 
 # ソリューション定義
@@ -172,7 +172,7 @@ def analyze_image(image):
     請求書画像から情報を抽出する
     """
     if image is None:
-        return None, "画像がアップロードされていません"
+        return "", "", "", "", "", "", [["", "", "", ""]], "", "画像がアップロードされていません"
     
     try:
         # 画像をbase64に変換
@@ -203,77 +203,27 @@ def analyze_image(image):
         # 解析結果を取得
         result = response.choices[0].message.parsed
         
-        # 結果を整形してHTML形式で返す
-        html_output = f"""
-        <div style='background-color: #f9f9f9; padding: 20px; border-radius: 8px; font-family: Arial, sans-serif;'>
-            <h3 style='color: #333; margin-top: 0;'>請求書情報</h3>
-            <table style='width: 100%; border-collapse: collapse;'>
-                <tr>
-                    <td style='font-weight: bold; padding: 8px; border-bottom: 1px solid #ddd;'>請求書番号</td>
-                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{result.invoice_number}</td>
-                </tr>
-                <tr>
-                    <td style='font-weight: bold; padding: 8px; border-bottom: 1px solid #ddd;'>発行日</td>
-                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{result.issue_date}</td>
-                </tr>
-                <tr>
-                    <td style='font-weight: bold; padding: 8px; border-bottom: 1px solid #ddd;'>支払期限</td>
-                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{result.due_date}</td>
-                </tr>
-                <tr>
-                    <td style='font-weight: bold; padding: 8px; border-bottom: 1px solid #ddd;'>請求元</td>
-                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{result.company_name}</td>
-                </tr>
-                <tr>
-                    <td style='font-weight: bold; padding: 8px; border-bottom: 1px solid #ddd;'>合計金額</td>
-                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{result.total_amount}</td>
-                </tr>
-                <tr>
-                    <td style='font-weight: bold; padding: 8px; border-bottom: 1px solid #ddd;'>税額</td>
-                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{result.tax_amount}</td>
-                </tr>
-            </table>
-            
-            <h4 style='color: #333; margin-top: 20px;'>請求項目</h4>
-            <table style='width: 100%; border-collapse: collapse;'>
-                <tr style='background-color: #eee;'>
-                    <th style='padding: 8px; text-align: left; border-bottom: 1px solid #ddd;'>項目</th>
-                    <th style='padding: 8px; text-align: left; border-bottom: 1px solid #ddd;'>数量</th>
-                    <th style='padding: 8px; text-align: left; border-bottom: 1px solid #ddd;'>単価</th>
-                    <th style='padding: 8px; text-align: left; border-bottom: 1px solid #ddd;'>金額</th>
-                </tr>
-        """
-        
-        # 請求項目を追加
+        # 請求項目のテーブルデータに変換
+        items_table = []
         for item in result.items:
-            html_output += f"""
-                <tr>
-                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{item.name}</td>
-                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{item.quantity}</td>
-                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{item.unit_price}</td>
-                    <td style='padding: 8px; border-bottom: 1px solid #ddd;'>{item.amount}</td>
-                </tr>
-            """
+            items_table.append([item.name, item.quantity, item.unit_price, item.amount])
         
-        html_output += """
-            </table>
-        """
-        
-        # 備考があれば追加
-        if result.notes:
-            # 改行を<br>に変換
-            notes_html = result.notes.replace('\n', '<br>')
-            html_output += f"""
-            <h4 style='color: #333; margin-top: 20px;'>備考</h4>
-            <p style='margin-top: 5px;'>{notes_html}</p>
-            """
-        
-        html_output += "</div>"
-        
-        return html_output, ""
+        # 結果を返す（各フィールドを個別に返す）
+        return (
+            result.invoice_number, 
+            result.issue_date, 
+            result.expire_date, 
+            result.company_name, 
+            result.total_amount, 
+            result.tax_amount, 
+            items_table,
+            result.notes,
+            ""  # エラーメッセージ（正常時は空文字）
+        )
     
     except Exception as e:
-        return None, f"請求書の分析中にエラーが発生しました: {str(e)}"
+        # エラー時は空の値とエラーメッセージを返す
+        return "", "", "", "", "", "", [["", "", "", ""]], "", f"請求書の分析中にエラーが発生しました: {str(e)}"
 
 def analyze_sales_report(csv_file, progress=gr.Progress()):
     """
@@ -919,23 +869,57 @@ with gr.Blocks(title="LLMビジネスアプリケーション デモ") as demo:
     gr.Markdown("# LLMビジネスアプリケーション デモ")
     gr.Markdown("ビジネス向け大規模言語モデルの非チャットアプリケーションを探索する")
     
-    with gr.Tab("請求書解析"):
-        gr.Markdown("## 請求書画像解析")
-        gr.Markdown("請求書画像をアップロードすると、AI技術を使って重要情報（請求書番号、発行日、金額、項目など）を自動的に抽出します。請求書処理の効率化、データ入力の自動化に活用できます。")
+    with gr.Tab("見積書解析"):
+        gr.Markdown("## 見積書画像解析")
+        gr.Markdown("見積書画像をアップロードすると、AI技術を使って重要情報（見積書番号、発行日、金額、項目など）を自動的に抽出します。見積書処理の効率化、データ入力の自動化に活用できます。")
         
         with gr.Row():
             with gr.Column(scale=1):
-                image_input = gr.Image(type="pil", label="請求書画像をアップロード")
-                analyze_button = gr.Button("請求書を解析", variant="primary")
+                image_input = gr.Image(type="pil", label="見積書画像をアップロード")
+                analyze_button = gr.Button("見積書を解析", variant="primary")
             
             with gr.Column(scale=2):
-                result_output = gr.HTML(label="抽出結果")
+                with gr.Group():
+                    # 請求書基本情報のフォーム
+                    invoice_number = gr.Textbox(label="見積書番号", placeholder="")
+                    with gr.Row():
+                        issue_date = gr.Textbox(label="発行日", placeholder="")
+                        expire_date = gr.Textbox(label="有効期限", placeholder="")
+                    company_name = gr.Textbox(label="発行元会社名", placeholder="")
+                    with gr.Row():
+                        total_amount = gr.Textbox(label="合計金額", placeholder="")
+                        tax_amount = gr.Textbox(label="税額", placeholder="")
+                
+                # 請求項目テーブル
+                items_table = gr.Dataframe(
+                    headers=["項目", "数量", "単価", "金額"],
+                    label="見積項目",
+                    interactive=True,
+                    col_count=(4, "fixed"),
+                    row_count=1,
+                    value=[["", "", "", ""]]
+                )
+                
+                # 備考
+                notes = gr.Textbox(label="備考", placeholder="", lines=3)
+                
+                # エラーメッセージ
                 error_output = gr.Textbox(label="エラーメッセージ", visible=True)
         
         analyze_button.click(
             analyze_image,
             inputs=[image_input],
-            outputs=[result_output, error_output]
+            outputs=[
+                invoice_number, 
+                issue_date, 
+                expire_date, 
+                company_name, 
+                total_amount, 
+                tax_amount, 
+                items_table,
+                notes,
+                error_output
+            ]
         )
 
     with gr.Tab("営業訪問分析"):
