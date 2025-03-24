@@ -8,11 +8,11 @@
   
   <!-- 発行元企業のロゴと情報 -->
   <circle cx="80" cy="60" r="30" fill="#3366CC" />
-  <text x="80" y="67" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#FFFFFF" font-weight="bold">SKT</text>
-  <text x="130" y="55" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#333333">株式会社スカイテック</text>
-  <text x="130" y="80" font-family="Arial, sans-serif" font-size="12" fill="#666666">〒105-0003 東京都港区西新橋2-7-4</text>
-  <text x="130" y="100" font-family="Arial, sans-serif" font-size="12" fill="#666666">TEL: 03-5157-1234 FAX: 03-5157-1235</text>
-  <text x="130" y="120" font-family="Arial, sans-serif" font-size="12" fill="#666666">E-mail: info@skytech.co.jp</text>
+  <text x="80" y="67" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#FFFFFF" font-weight="bold">◯◯</text>
+  <text x="130" y="55" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#333333">株式会社◯◯テック</text>
+  <text x="130" y="80" font-family="Arial, sans-serif" font-size="12" fill="#666666">〒105-1234 東京都港区西新橋1-2-3</text>
+  <text x="130" y="100" font-family="Arial, sans-serif" font-size="12" fill="#666666">TEL: 03-5432-1234 FAX: 03-5432-1235</text>
+  <text x="130" y="120" font-family="Arial, sans-serif" font-size="12" fill="#666666">E-mail: info@xxxtech.co.jp</text>
   
   <!-- 見積書タイトル -->
   <text x="400" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#333333">見積書</text>
@@ -23,10 +23,10 @@
   <text x="600" y="240" text-anchor="start" font-family="Arial, sans-serif" font-size="12" fill="#333333">有効期限: 2025年4月20日</text>
   
   <!-- 宛先情報 -->
-  <text x="50" y="220" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333333">株式会社フューチャーネット 御中</text>
-  <text x="50" y="240" font-family="Arial, sans-serif" font-size="12" fill="#666666">〒150-0002 東京都渋谷区渋谷3-15-8</text>
+  <text x="50" y="220" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333333">株式会社△△ネット 御中</text>
+  <text x="50" y="240" font-family="Arial, sans-serif" font-size="12" fill="#666666">〒150-2345 東京都渋谷区渋谷3-4-5</text>
   <text x="50" y="260" font-family="Arial, sans-serif" font-size="12" fill="#666666">担当: 山田 太郎 様</text>
-  <text x="50" y="280" font-family="Arial, sans-serif" font-size="12" fill="#666666">TEL: 03-3498-5678</text>
+  <text x="50" y="280" font-family="Arial, sans-serif" font-size="12" fill="#666666">TEL: 03-3456-7890</text>
   
   <!-- 件名 -->
   <rect x="50" y="300" width="700" height="30" fill="#3366CC" />
@@ -112,8 +112,8 @@
   <!-- フッター部分 -->
   <line x1="50" y1="850" x2="750" y2="850" stroke="#CCCCCC" stroke-width="1" />
   <text x="60" y="870" font-family="Arial, sans-serif" font-size="12" fill="#666666">お問い合わせは下記の担当者までお願いいたします。</text>
-  <text x="60" y="890" font-family="Arial, sans-serif" font-size="12" fill="#666666">営業担当: 佐藤 健太 (k.sato@skytech.co.jp)</text>
-  <text x="60" y="910" font-family="Arial, sans-serif" font-size="12" fill="#666666">技術担当: 鈴木 誠 (m.suzuki@skytech.co.jp)</text>
+  <text x="60" y="890" font-family="Arial, sans-serif" font-size="12" fill="#666666">営業担当: 佐藤 健太 (k.sato@xxxtech.co.jp)</text>
+  <text x="60" y="910" font-family="Arial, sans-serif" font-size="12" fill="#666666">技術担当: 鈴木 誠 (m.suzuki@xxxtech.co.jp)</text>
   
   <!-- 印鑑欄 -->
   <rect x="600" y="830" width="100" height="100" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" />
